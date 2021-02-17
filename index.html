@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="listaTelefonica">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Telefonica</title>
+    <script src="lib/angular/angular.js"></script>
+    <script src="lib/angular/angular-locale_pt-br.js"></script>
+    <script src="lib/angular/angular-messages.js"></script>
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css">
+
+    <style>
+        .jumbotron {
+            width: 70%;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 3%;
+        }
+
+        .table {
+            margin-top: 6%;
+        }
+
+        .selecionado {
+            background-color: bisque;
+        }
+
+        .negrito {
+            font-weight: bold;
+        }
+
+    </style>
+
+    <script>
+
+        //callback(http://localhost:51258/api/Contatos/GetAll);
+
+        angular.module("listaTelefonica", ["ngMessages"]);
+        angular.module("listaTelefonica").controller("listaTelefonicaController", function($scope, $http) {
+            $scope.app = "Lista Telefonica";
+
+            $scope.contatos = [
+                /*{nome: "Angélica", data: new Date(), telefone: "11 94863-0000", cor: "blue", operadora: {nome: "Oi", codigo: 14, categoria: "Celular"}},
+                {nome: "Jéssica", data: new Date(), telefone: "11 94863-1111", cor: "red", operadora: {nome: "Vivo", codigo: 15, categoria: "Celular"}},
+                {nome: "Erika", data: new Date(), telefone: "11 94863-2222", cor: "green", operadora: {nome: "Tim", codigo: 41, categoria: "Celular"}},
+                {nome: "Giane", data: new Date(), telefone: "11 94863-3333", cor: "yellow", operadora: {nome: "Embratel", codigo: 21, categoria: "Fixo"}}*/
+            ];
+
+            $scope.operadoras = [
+                /*{nome: "Oi", codigo:  14, categoria: "Celular", preco: 2},
+                {nome: "Vivo", codigo: 15, categoria: "Celular", preco: 1},
+                {nome: "Tim", codigo: 41, categoria: "Celular", preco: 3},
+                {nome: "GVT", codigo: 25, categoria: "Fixo", preco: 1},
+                {nome: "Embratel", codigo: 21, categoria: "Fixo", preco: 2}*/
+            ];
+
+            var carregarContatos = function () {
+                $http.get("http://localhost:51258/api/Contatos/GetAll").then(function (data, status) {
+                    $scope.contatos = data;
+                }).catch (function (data, status){
+                    $scope.message = "houve um erro ao executar essa ação: " + status + " - " + data;
+                });
+            }
+
+            var carregarOperadoras = function() {
+                $http.get("http://localhost:51258/api/Operadoras/GetAll").then(function (data) {
+                    $scope.operadoras = data;
+                });
+            }
+
+            //As funções atribuídas a scope são somente as que são compartilhadas com a view
+
+            $scope.adicionarContato = function (contato) {
+                contato.data = new Date();
+                //$scope.contatos.push(contato);
+                $http.post("http://localhost:51258/api/Contatos/AddNew", contato).then(function (data){
+                    delete $scope.contato;
+                    $scope.contatoForm.$setPristine();
+                    carregarContatos();
+                });                
+            };
+
+            $scope.apagarContatos = function (contatos) {
+                $scope.contatos = contatos.filter(function (contato) {
+                    if (!contato.selecionado) {
+                        return contato;
+                    }
+                });
+            };
+
+            $scope.existeContatoSelecionado = function (contatos) {
+                return contatos.some(function (contato) {
+                    return contato.selecionado;
+                });
+            };
+
+            $scope.ordenarPor = function (campo) {
+                $scope.criterioDeOrdenacao = campo;
+                $scope.direcaoDaOrdenacao = !$scope.direcaoDaOrdenacao;
+            };
+
+            carregarContatos();
+
+        });
+    </script>
+
+</head>
+<body>
+    <div ng-controller="listaTelefonicaController">
+        <div class="jumbotron">
+            <h3 ng-bind="app"></h3>
+            <!-- OU {{app}} -- a expression (interpolação da expressão) permite concatenar strings, fazer cálculo e etc -->
+
+            <input type="text" ng-model="criterioDeBusca" placeholder="O que você está buscando?" class="form-control">
+
+            <table ng-hide="contatos.length == 0" class="table table-striped">
+                <tr>                    
+                    <th></th>
+                    <th><a href="" ng-click="ordenarPor('nome')">Nome</a></th>
+                    <th><a href="" ng-click="ordenarPor('telefone')">Telefone</a></th>
+                    <th><a href="" ng-click="ordenarPor('operadora.nome')">Operadora</a></th>
+                    <th><a href="" ng-click="ordenarPor('data')">Data de inclusão</a></th>
+                    <th></th>
+                </tr>
+                <tr ng-class="{'selecionado negrito': contato.selecionado}" ng-repeat="contato in contatos | filter:{nome:criterioDeBusca} | orderBy:criterioDeOrdenacao:direcaoDaOrdenacao"> 
+                    <td><input type="checkbox" ng-model="contato.selecionado"></td>
+                    <td>{{contato.nome | lowercase}}</td>
+                    <td>{{contato.telefone}}</td>
+                    <td>{{contato.operadora.nome | lowercase}}</td>
+                    <td>{{contato.data | date:'EEE dd/MM/yyyy HH:mm'}}</td>
+                    <td><div style="width: 20px; height: 20px;" ng-style="{'background-color': contato.cor}"></div></td>
+                </tr>
+            </table>
+            <hr/>
+            <form name="contatoForm">
+                <input class="form-control" type="text" ng-model="contato.nome" name="nome" placeholder="nome do contato" ng-required="true" ng-minlength="5"/>
+                <input class="form-control mt-2" type="text" ng-model="contato.telefone" name="telefone" placeholder="(99) 9999-9999" ng-required="true" ng-pattern="/^\(\d{2}\) \d{4,5}-\d{4}$/"/>
+                <select class="form-control mt-2" ng-model="contato.operadora" ng-options="operadora.nome + ' ('+ (operadora.preco | currency) + ')' group by operadora.categoria for operadora in operadoras | orderBy:'nome'">
+                    <!-- usando o ng-options da forma "operadora.codigo as operadora.nome", o label no select é o nome mas o value é o código -->
+                    <option value="">Selecione uma operadora</option>
+                </select>
+            </form>
+            <button class="btn btn-primary btn-lg mt-4" ng-click="adicionarContato(contato)" ng-disabled="contatoForm.$invalid">Incluir</button>
+            <button class="btn btn-danger btn-lg mt-4 ml-2" ng-click="apagarContatos(contatos)" ng-if="existeContatoSelecionado(contatos)">Excluir</button>
+            
+            <div ng-show="contatoForm.nome.$dirty" ng-messages="contatoForm.nome.$error">
+                <div ng-message="required" class="alert alert-danger mt-4">
+                    preencha o nome do contato
+                </div>
+                <div ng-message="minlength" class="alert alert-danger mt-4">
+                    o campo nome deve conter no mínimo 5 caracteres
+                </div>
+            </div>
+
+            <div ng-show="contatoForm.telefone.$error.required && contatoForm.telefone.$dirty" class="alert alert-danger mt-4">
+                preencha o telefone do contato
+            </div>
+
+            <div ng-show="contatoForm.telefone.$error.pattern" class="alert alert-danger mt-4">
+                o campo telefone deve ter o formato (xx) 9999-9999
+            </div>    
+        </div>
+    </div>
+    <!-- Usar ng-include para colocar o footer proveniente de outra página html -->
+</body>
+</html>
