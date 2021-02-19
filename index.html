@@ -40,32 +40,34 @@
         angular.module("listaTelefonica").controller("listaTelefonicaController", function($scope, $http) {
             $scope.app = "Lista Telefonica";
 
-            $scope.contatos = [
+            $scope.contatos = [];
                 /*{nome: "Angélica", data: new Date(), telefone: "11 94863-0000", cor: "blue", operadora: {nome: "Oi", codigo: 14, categoria: "Celular"}},
                 {nome: "Jéssica", data: new Date(), telefone: "11 94863-1111", cor: "red", operadora: {nome: "Vivo", codigo: 15, categoria: "Celular"}},
                 {nome: "Erika", data: new Date(), telefone: "11 94863-2222", cor: "green", operadora: {nome: "Tim", codigo: 41, categoria: "Celular"}},
                 {nome: "Giane", data: new Date(), telefone: "11 94863-3333", cor: "yellow", operadora: {nome: "Embratel", codigo: 21, categoria: "Fixo"}}*/
-            ];
-
-            $scope.operadoras = [
+            
+            $scope.operadoras = [];
                 /*{nome: "Oi", codigo:  14, categoria: "Celular", preco: 2},
                 {nome: "Vivo", codigo: 15, categoria: "Celular", preco: 1},
                 {nome: "Tim", codigo: 41, categoria: "Celular", preco: 3},
                 {nome: "GVT", codigo: 25, categoria: "Fixo", preco: 1},
                 {nome: "Embratel", codigo: 21, categoria: "Fixo", preco: 2}*/
-            ];
-
+            
             var carregarContatos = function () {
-                $http.get("http://localhost:51258/api/Contatos/GetAll").then(function (data, status) {
-                    $scope.contatos = data;
+                $http.get("http://localhost:51258/api/Contatos/GetAll").then(function (coisas) {                    
+                    $scope.contatos = coisas.data;
+                    console.log($scope.contatos);
                 }).catch (function (data, status){
                     $scope.message = "houve um erro ao executar essa ação: " + status + " - " + data;
                 });
             }
 
             var carregarOperadoras = function() {
-                $http.get("http://localhost:51258/api/Operadoras/GetAll").then(function (data) {
-                    $scope.operadoras = data;
+                $http.get("http://localhost:51258/api/Operadoras/GetAll").then(function (coisas) {
+                    $scope.operadoras = coisas.data;
+                    console.log($scope.operadoras);
+                }).catch (function (data, status){
+                    $scope.message = "houve um erro ao executar essa ação: " + status + " - " + data;
                 });
             }
 
@@ -78,6 +80,8 @@
                     delete $scope.contato;
                     $scope.contatoForm.$setPristine();
                     carregarContatos();
+                }).catch (function (data, status){
+                    $scope.message = "houve um erro ao executar essa ação: " + status + " - " + data;
                 });                
             };
 
@@ -101,6 +105,7 @@
             };
 
             carregarContatos();
+            carregarOperadoras();
 
         });
     </script>
