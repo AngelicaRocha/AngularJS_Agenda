@@ -13,6 +13,8 @@
     <script src="js/services/operadorasAPIService.js"></script>
     <script src="js/services/serialGenerationService.js"></script>
     <script src="js/config/serialGeneratorConfig.js"></script>
+    <script src="js/filters/nameFilter.js"></script>
+    <script src="js/filters/ellipsisFilter.JS"></script>
     <script src="js/configValue.js"></script>
     <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="css/app.css">
@@ -40,7 +42,7 @@
                 <tr ng-class="{'selecionado negrito': contato.selecionado}" ng-repeat="contato in contatos | filter:{nome:criterioDeBusca} | orderBy:criterioDeOrdenacao:direcaoDaOrdenacao"> 
                     <td><input type="checkbox" ng-model="contato.selecionado"></td>
                     <td>{{contato.serial}}</td>
-                    <td>{{contato.nome | lowercase}}</td>
+                    <td>{{contato.nome | name | ellipsis:15}}</td>
                     <td>{{contato.telefone}}</td>
                     <td>{{contato.operadora.nome | lowercase}}</td>
                     <td>{{contato.data | date:'EEE dd/MM/yyyy HH:mm'}}</td>

@@ -1,3 +1,5 @@
+//Controller é um componente do angular assim como filer, value, etc.
+
 angular.module("listaTelefonica").controller("listaTelefonicaController", function($scope, contatosAPI, operadorasAPI, serialGenerator) {
     
     $scope.app = "Lista Telefonica";
@@ -26,7 +28,7 @@ angular.module("listaTelefonica").controller("listaTelefonicaController", functi
     $scope.adicionarContato = function (contato) {
          contato.serial = serialGenerator.generate();
          contato.data = new Date();
-         contato.cor = "red";
+         contato.cor = "green";
          contatosAPI.saveContato(contato).then(function (data){
              delete $scope.contato;
              $scope.contatoForm.$setPristine();
