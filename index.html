@@ -14,10 +14,12 @@
     <script src="js/services/serialGenerationService.js"></script>
     <script src="js/config/serialGeneratorConfig.js"></script>
     <script src="js/filters/nameFilter.js"></script>
-    <script src="js/filters/ellipsisFilter.JS"></script>
+    <script src="js/filters/ellipsisFilter.js"></script>
+    <script src="js/directives/uiAlertDirective.js"></script>
     <script src="js/configValue.js"></script>
     <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="css/app.css">
+    <link rel="stylesheet" type="text/css" href="css/ui.css">
 
 
 </head>
@@ -27,6 +29,10 @@
             <h3 ng-bind="app"></h3>
             <!-- OU {{app}} -- a expression (interpolação da expressão) permite concatenar strings, fazer cálculo e etc -->
 
+            <ui-alert title="Erro: ">
+                {{message}}
+            </ui-alert>
+            
             <input type="text" ng-model="criterioDeBusca" placeholder="O que você está buscando?" class="form-control">
 
             <table ng-hide="contatos.length == 0" class="table table-striped">
