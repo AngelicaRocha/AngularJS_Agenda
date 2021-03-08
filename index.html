@@ -16,6 +16,8 @@
     <script src="js/filters/nameFilter.js"></script>
     <script src="js/filters/ellipsisFilter.js"></script>
     <script src="js/directives/uiAlertDirective.js"></script>
+    <script src="js/directives/uiDateDirective.js"></script>
+    <script src="js/directives/uiPhoneDirective.js"></script>
     <script src="js/configValue.js"></script>
     <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="css/app.css">
@@ -29,7 +31,7 @@
             <h3 ng-bind="app"></h3>
             <!-- OU {{app}} -- a expression (interpolação da expressão) permite concatenar strings, fazer cálculo e etc -->
 
-            <ui-alert title="Erro: ">
+            <ui-alert title="Erro: " ng-show="message">
                 {{message}}
             </ui-alert>
             
@@ -58,7 +60,9 @@
             <hr/>
             <form name="contatoForm">
                 <input class="form-control" type="text" ng-model="contato.nome" name="nome" placeholder="nome do contato" ng-required="true" ng-minlength="5"/>
-                <input class="form-control mt-2" type="text" ng-model="contato.telefone" name="telefone" placeholder="(99) 9999-9999" ng-required="true" ng-pattern="/^\(\d{2}\) \d{4,5}-\d{4}$/"/>
+                <!-- <input class="form-control mt-2" type="text" ng-model="contato.telefone" name="telefone" placeholder="(99) 99999999" ng-required="true" ng-pattern="/^\(\d{2}\) \d{4,5}-\d{4}$/"/> -->
+                <input class="form-control mt-2" type="text" ng-model="contato.telefone" name="telefone" placeholder="(99) 99999999" ng-required="true" ui-phone/>
+                <input class="form-control mt-2" type="text" ng-model="contato.data" name="data" placeholder="Data" ui-date/>
                 <select class="form-control mt-2" ng-model="contato.operadora" ng-options="operadora.nome + ' ('+ (operadora.preco | currency) + ')' group by operadora.categoria for operadora in operadoras | orderBy:'nome'">
                     <!-- usando o ng-options da forma "operadora.codigo as operadora.nome", o label no select é o nome mas o value é o código -->
                     <option value="">Selecione uma operadora</option>

@@ -18,7 +18,7 @@ angular.module("listaTelefonica").controller("listaTelefonicaController", functi
         operadorasAPI.getOperadoras().then(function (response) {
             $scope.operadoras = response.data;
         }).catch (function (response){
-            $scope.message = "não foi possível carregar os dados."; //: " + status + " - " + response.data.message;
+            $scope.message = "não foi possível carregar os dados.";
         });
     }            
 
