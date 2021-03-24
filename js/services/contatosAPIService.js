@@ -2,6 +2,7 @@
 //Quando registramos um serviço com factory, o angular invoca a função injetando o $http
 
 angular.module("listaTelefonica").factory("contatosAPI", function ($http, config) {
+    
     var _getContatos = function () {
         return $http.get(config.baseUrl + "/Contatos/GetAll");
     };

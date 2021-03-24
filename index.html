@@ -18,6 +18,7 @@
     <script src="js/directives/uiAlertDirective.js"></script>
     <script src="js/directives/uiDateDirective.js"></script>
     <script src="js/directives/uiPhoneDirective.js"></script>
+    <script src="js/directives/uiAccordionDirective.js"></script>
     <script src="js/configValue.js"></script>
     <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="css/app.css">
@@ -30,6 +31,20 @@
         <div class="jumbotron">
             <h3 ng-bind="app"></h3>
             <!-- OU {{app}} -- a expression (interpolação da expressão) permite concatenar strings, fazer cálculo e etc -->
+
+            <ui-accordions>
+                <ui-accordion title="Accordion 1">
+                    Esse é o conteúdo do accordion 1
+                </ui-accordion>
+
+                <ui-accordion title="Accordion 2">
+                    Esse é o conteúdo do accordion 1
+                </ui-accordion>
+
+                <ui-accordion title="Accordion 3">
+                    Esse é o conteúdo do accordion 3
+                </ui-accordion>
+            </ui-accordions>
 
             <ui-alert title="Erro: " ng-show="message">
                 {{message}}
